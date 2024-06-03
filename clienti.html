@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clienti Registrati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #e0f2f1;
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 5px solid #4caf50;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons a, .buttons button {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 5px;
+        }
+        .buttons a:hover, .buttons button:hover {
+            background-color: #004494;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userList = document.getElementById('userList');
+
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user.nome} ${user.cognome} - ${user.email}`;
+                userList.appendChild(li);
+            });
+        });
+
+        function downloadClients() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            let userText = users.map(user => {
+                return `Nome: ${user.nome}\nCognome: ${user.cognome}\nData di Nascita: ${user.dataNascita}\nEmail: ${user.email}\nTelefono: ${user.telefono}\nIndirizzo: ${user.indirizzo}\nCAP: ${user.cap}\nCivico: ${user.civico}\nNote: ${user.note}\n\n`;
+            }).join('---\n');
+
+            const blob = new Blob([userText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'clienti.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Clienti Registrati</h1>
+        <ul id="userList"></ul>
+        <div class="buttons">
+            <a href="index.html">Torna alla pagina principale</a>
+            <button onclick="downloadClients()">Scarica elenco clienti</button>
+        </div>
+    </div>
+</body>
+</html>

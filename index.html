@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrazione - HOIRIS</title>
+    <title>Registrazione Clienti</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,15 +40,16 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        input[type="submit"] {
+        input[type="submit"], button {
             background-color: #0056b3;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            text-align: center;
         }
-        input[type="submit"]:hover {
+        input[type="submit"]:hover, button:hover {
             background-color: #004494;
         }
         @media (max-width: 600px) {
@@ -58,9 +59,68 @@
                 padding: 10px;
             }
         }
+        .link {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .link a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+        .client {
+            background: #e0f2f1;
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 5px solid #4caf50;
+        }
     </style>
+</head>
+<body>
+    <div class="container" id="formContainer">
+        <h1>Benvenuto in HOIRIS</h1>
+        <p>Compila il form sottostante per registrarti e unirti alla nostra comunità di appassionati di fotografia dell'iride.</p>
+        <form id="registrationForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+            <label for="cognome">Cognome:</label>
+            <input type="text" id="cognome" name="cognome" required>
+            <label for="data_nascita">Data di Nascita:</label>
+            <input type="date" id="data_nascita" name="data_nascita" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="telefono">Numero di Telefono:</label>
+            <input type="tel" id="telefono" name="telefono" required>
+            <label for="indirizzo">Indirizzo di Residenza:</label>
+            <input type="text" id="indirizzo" name="indirizzo" required>
+            <label for="cap">CAP:</label>
+            <input type="text" id="cap" name="cap" required>
+            <label for="civico">Numero Civico:</label>
+            <input type="text" id="civico" name="civico" required>
+            <label for="note">Note:</label>
+            <textarea id="note" name="note" required></textarea>
+            <input type="submit" value="Registra">
+        </form>
+        <div class="link">
+            <a href="#" id="viewClientsLink">Visualizza i clienti registrati</a>
+        </div>
+    </div>
+
+    <div class="container" id="clientsContainer" style="display: none;">
+        <h1>Clienti Registrati</h1>
+        <div id="clientList"></div>
+        <div class="link">
+            <a href="#" id="backToFormLink">Torna alla pagina principale</a>
+        </div>
+        <div class="link">
+            <button onclick="downloadClients()">Scarica elenco clienti</button>
+        </div>
+    </div>
+
     <script>
-        function registerUser(event) {
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
             const nome = document.getElementById('nome').value;
@@ -84,36 +144,46 @@
             localStorage.setItem('users', JSON.stringify(users));
 
             alert('Registrazione avvenuta con successo!');
-            window.location.href = 'index.html';
+            document.getElementById('registrationForm').reset();
+        });
+
+        document.getElementById('viewClientsLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('clientsContainer').style.display = 'block';
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '';
+
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'client';
+                div.textContent = `${user.nome} ${user.cognome} - ${user.email}`;
+                clientList.appendChild(div);
+            });
+        });
+
+        document.getElementById('backToFormLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('clientsContainer').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'block';
+        });
+
+        function downloadClients() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            let userText = users.map(user => {
+                return `Nome: ${user.nome}\nCognome: ${user.cognome}\nData di Nascita: ${user.dataNascita}\nEmail: ${user.email}\nTelefono: ${user.telefono}\nIndirizzo: ${user.indirizzo}\nCAP: ${user.cap}\nCivico: ${user.civico}\nNote: ${user.note}\n\n`;
+            }).join('---\n');
+
+            const blob = new Blob([userText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'clienti.txt';
+            a.click();
+            URL.revokeObjectURL(url);
         }
     </script>
-</head>
-<body>
-    <div class="container">
-        <h1>Benvenuto in HOIRIS</h1>
-        <p>Compila il form sottostante per registrarti e unirti alla nostra comunità di appassionati di fotografia dell'iride.</p>
-        <form onsubmit="registerUser(event)">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
-            <label for="cognome">Cognome:</label>
-            <input type="text" id="cognome" name="cognome" required>
-            <label for="data_nascita">Data di Nascita:</label>
-            <input type="date" id="data_nascita" name="data_nascita" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="telefono">Numero di Telefono:</label>
-            <input type="tel" id="telefono" name="telefono" required>
-            <label for="indirizzo">Indirizzo di Residenza:</label>
-            <input type="text" id="indirizzo" name="indirizzo" required>
-            <label for="cap">CAP:</label>
-            <input type="text" id="cap" name="cap" required>
-            <label for="civico">Numero Civico:</label>
-            <input type="text" id="civico" name="civico" required>
-            <label for="note">Note:</label>
-            <textarea id="note" name="note" required></textarea>
-            <input type="submit" value="Registra">
-        </form>
-        <p style="text-align: center;"><a href="clienti.html">Visualizza i clienti registrati</a></p>
-    </div>
 </body>
 </html>

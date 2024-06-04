@@ -5,101 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione Clienti</title>
     <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
-.container {
-    width: 90%;
-    max-width: 600px;
-    margin: 20px auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
-h1, p {
-    text-align: center;
-}
+        h1, p {
+            text-align: center;
+        }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+        }
 
-label {
-    margin-bottom: 5px;
-}
+        label {
+            margin-bottom: 5px;
+        }
 
-input[type="text"],
-input[type="date"],
-input[type="email"],
-input[type="tel"],
-textarea {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: calc(100% - 22px); /* Aggiunto */
-    box-sizing: border-box;
-}
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
 
-input[type="submit"], button {
-    background-color: #0056b3;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-}
+        input[type="submit"], button {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
 
-input[type="submit"]:hover, button:hover {
-    background-color: #004494;
-}
+        input[type="submit"]:hover, button:hover {
+            background-color: #004494;
+        }
 
-.link {
-    margin-top: 20px;
-    text-align: center;
-}
+        .link {
+            margin-top: 20px;
+            text-align: center;
+        }
 
-.link a {
-    color: #0056b3;
-    text-decoration: none;
-}
+        .link a {
+            color: #0056b3;
+            text-decoration: none;
+        }
 
-.link a:hover {
-    text-decoration: underline;
-}
+        .link a:hover {
+            text-decoration: underline;
+        }
 
-.client {
-    background: #e0f2f1;
-    margin: 10px 0;
-    padding: 10px;
-    border-left: 5px solid #4caf50;
-}
+        .client {
+            background: #e0f2f1;
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 5px solid #4caf50;
+        }
 
-@media (max-width: 600px) {
-    input[type="text"],
-    input[type="date"],
-    input[type="email"],
-    input[type="tel"],
-    textarea {
-        margin-bottom: 5px;
-        width: calc(100% - 20px); /* Aggiunto */
-    }
+        @media (max-width: 600px) {
+            input[type="text"],
+            input[type="date"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                margin-bottom: 5px;
+                width: calc(100% - 20px);
+            }
 
-    input[type="submit"],
-    button {
-        width: 100%;
-    }
-}
-
+            input[type="submit"],
+            button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -140,6 +139,9 @@ input[type="submit"]:hover, button:hover {
         </div>
         <div class="link">
             <button onclick="downloadClients()">Scarica elenco clienti</button>
+        </div>
+        <div class="link">
+            <button onclick="resetClients()">Resetta elenco clienti</button>
         </div>
     </div>
 
@@ -207,6 +209,14 @@ input[type="submit"]:hover, button:hover {
             a.download = 'clienti.txt';
             a.click();
             URL.revokeObjectURL(url);
+        }
+
+        function resetClients() {
+            if (confirm('Sei sicuro di voler cancellare tutti i clienti registrati?')) {
+                localStorage.removeItem('users');
+                alert('Elenco clienti resettato con successo!');
+                document.getElementById('clientList').innerHTML = '';
+            }
         }
     </script>
 </body>
